@@ -76,7 +76,7 @@ with st.sidebar:
     st.markdown("---")
 
     st.header("Chat Controls")
-    if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True):
+    if st.button("Clear Chat", help="Clear all chat messages", use_container_width=True):
         # Clear messages but preserve the welcome message
         st.session_state.messages = [{"role": "assistant", "content": "Hi, You can ask me anything about Orkun Sefik!"}]
         st.rerun()
