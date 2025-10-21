@@ -44,7 +44,7 @@ retriever = db.as_retriever(
 )
 
 llm = GoogleGenerativeAI(
-    model="gemini-2.0-flash-lite", 
+    model="gemini-2.5-flash-lite", 
     google_api_key=os.environ['GEMINI_API_KEY']
 )
 
