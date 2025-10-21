@@ -81,7 +81,7 @@ with st.sidebar:
         st.session_state.messages = [{"role": "assistant", "content": "Hi, You can ask me anything about Orkun Sefik!"}]
         st.rerun()
 
-    st.markdown("---")
+    # st.markdown("---")
 
 # Initialize chat history
 if "messages" not in st.session_state:
