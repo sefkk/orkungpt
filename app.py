@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Orkun GPT",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
     menu_items={
         'Get Help': None,
         'Report a bug': None,
@@ -29,15 +29,22 @@ st.markdown("""
         .main .block-container {
             padding: 0.5rem !important;
             max-width: 100% !important;
+            margin-left: 0 !important;
         }
         
+        /* Force sidebar to be completely hidden on mobile */
         .stSidebar {
-            width: 100% !important;
-            min-width: 100% !important;
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
         }
         
-        .stSidebar .sidebar-content {
-            padding: 0.75rem !important;
+        /* Ensure main content takes full width */
+        .main {
+            width: 100% !important;
+            margin-left: 0 !important;
         }
         
         /* Stack columns on very small screens */
@@ -64,15 +71,22 @@ st.markdown("""
     @media (min-width: 481px) and (max-width: 768px) {
         .main .block-container {
             padding: 1rem !important;
+            margin-left: 0 !important;
         }
         
+        /* Force sidebar to be completely hidden on small phones too */
         .stSidebar {
-            width: 100% !important;
-            min-width: 100% !important;
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
         }
         
-        .stSidebar .sidebar-content {
-            padding: 1rem !important;
+        /* Ensure main content takes full width */
+        .main {
+            width: 100% !important;
+            margin-left: 0 !important;
         }
     }
     
@@ -372,92 +386,101 @@ st.markdown("""
     
     .quick-action:hover::before {
         left: 100%;
-    }
+        }
         </style>
 """, unsafe_allow_html=True)
 
 st.title("Orkun GPT")
-st.caption("Your personal AI assistant powered by your documents")
+st.caption("Orkun's personal AI assistant powered by Orkun's documents")
 
-# Sidebar with enhanced features
+# Mobile-friendly quick actions in main area
+st.markdown("### ⚡ Quick Actions")
+
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("👤 About Orkun", help="Ask about Orkun's background", use_container_width=True):
+        query = "Tell me about Orkun's background and experience"
+        st.session_state.messages.append({"role": "user", "content": query})
+        
+        # Process the query and get AI response
+        with st.spinner("🤔 Thinking..."):
+            response = execute_user_query(query)
+        
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.rerun()
+
+with col2:
+    if st.button("🎓 Education", help="Ask about education", use_container_width=True):
+        query = "What is Orkun's educational background?"
+        st.session_state.messages.append({"role": "user", "content": query})
+        
+        # Process the query and get AI response
+        with st.spinner("🤔 Thinking..."):
+            response = execute_user_query(query)
+        
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.rerun()
+
+col3, col4 = st.columns(2)
+with col3:
+    if st.button("💼 Skills", help="Ask about skills", use_container_width=True):
+        query = "What are Orkun's technical skills and expertise?"
+        st.session_state.messages.append({"role": "user", "content": query})
+        
+        # Process the query and get AI response
+        with st.spinner("🤔 Thinking..."):
+            response = execute_user_query(query)
+        
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.rerun()
+
+with col4:
+    if st.button("🏆 Achievements", help="Ask about achievements", use_container_width=True):
+        query = "What are Orkun's key achievements and accomplishments?"
+        st.session_state.messages.append({"role": "user", "content": query})
+        
+        # Process the query and get AI response
+        with st.spinner("🤔 Thinking..."):
+            response = execute_user_query(query)
+        
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.rerun()
+
+# Clear chat button in main UI for mobile access
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.markdown("")  # Empty space for alignment
+with col2:
+    if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True, key="main_clear_chat"):
+        st.session_state.messages = [{"role": "assistant", "content": "Hi! I'm Orkun GPT. You can ask me anything about Orkun Sefik - his background, skills, education, or achievements. What would you like to know?"}]
+        st.rerun()
+
+st.markdown("---")
+
+# Sidebar with enhanced features (only visible on desktop)
 with st.sidebar:
-    # Info section with gradient design
+    # Desktop-only info section
     st.markdown("""
-        <div class="orkun-info-box">
+    <div class="orkun-info-box">
         <div class="orkun-info-title">📚 About Orkun GPT</div>
         <div class="orkun-info-desc">This AI assistant was trained on:</div>
-            <ul class="orkun-info-list">
+        <ul class="orkun-info-list">
             <li>Orkun's CV & Resume</li>
             <li>University Transcript</li>
             <li>Some Other Personal Info</li>
-            </ul>
-        </div>
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    # Quick Actions Section
-    st.subheader("Quick Actions")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("About Orkun", help="Ask about Orkun's background", use_container_width=True):
-            query = "Tell me about Orkun's background and experience"
-            st.session_state.messages.append({"role": "user", "content": query})
-            
-            # Process the query and get AI response
-            with st.spinner("🤔 Thinking..."):
-                response = execute_user_query(query)
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            st.rerun()
-    
-    with col2:
-        if st.button("Education", help="Ask about education", use_container_width=True):
-            query = "What is Orkun's educational background?"
-            st.session_state.messages.append({"role": "user", "content": query})
-            
-            # Process the query and get AI response
-            with st.spinner("🤔 Thinking..."):
-                response = execute_user_query(query)
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            st.rerun()
-    
-    col3, col4 = st.columns(2)
-    with col3:
-        if st.button("Skills", help="Ask about skills", use_container_width=True):
-            query = "What are Orkun's technical skills and expertise?"
-            st.session_state.messages.append({"role": "user", "content": query})
-            
-            # Process the query and get AI response
-            with st.spinner("🤔 Thinking..."):
-                response = execute_user_query(query)
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            st.rerun()
-    
-    with col4:
-        if st.button("Achievements", help="Ask about achievements", use_container_width=True):
-            query = "What are Orkun's key achievements and accomplishments?"
-            st.session_state.messages.append({"role": "user", "content": query})
-            
-            # Process the query and get AI response
-            with st.spinner("🤔 Thinking..."):
-                response = execute_user_query(query)
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            st.rerun()
 
     st.markdown("---")
     
     # Chat Controls
     st.subheader("Chat Controls")
     
-    if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True):
+    if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True, key="sidebar_clear_chat"):
         st.session_state.messages = [{"role": "assistant", "content": "Hi! I'm Orkun GPT. You can ask me anything about Orkun Sefik - his background, skills, education, or achievements. What would you like to know?"}]
         st.rerun()
-
+    
     # Export chat option
     if st.button("📥 Export Chat", help="Download chat history", use_container_width=True):
         if "messages" in st.session_state and len(st.session_state.messages) > 1:
