@@ -47,15 +47,7 @@ st.markdown("""
             margin-left: 0 !important;
         }
         
-        /* Stack columns on very small screens */
-        .stColumns {
-            flex-direction: column !important;
-        }
-        
-        .stColumns > div {
-            width: 100% !important;
-            margin-bottom: 0.5rem;
-        }
+        /* Mobile grid handled by unified CSS below */
         
         /* Smaller text on tiny screens */
         .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
@@ -88,6 +80,8 @@ st.markdown("""
             width: 100% !important;
             margin-left: 0 !important;
         }
+        
+        /* Mobile grid handled by unified CSS below */
     }
     
     /* Tablets and larger phones (769px to 1024px) */
@@ -155,17 +149,35 @@ st.markdown("""
         word-break: break-word;
     }
     
-    /* Responsive columns for different screen sizes */
-    @media (max-width: 480px) {
-        .stColumns > div {
-            width: 100% !important;
-            margin-bottom: 0.5rem;
+    /* Force 2x2 grid on mobile - more specific targeting */
+    @media (max-width: 768px) {
+        /* Target the specific columns container */
+        .main .block-container .stColumns {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 0.5rem !important;
         }
-    }
-    
-    @media (min-width: 481px) and (max-width: 768px) {
-        .stColumns > div {
-            width: 50% !important;
+        
+        .main .block-container .stColumns > div {
+            width: calc(50% - 0.25rem) !important;
+            flex: 0 0 calc(50% - 0.25rem) !important;
+            max-width: calc(50% - 0.25rem) !important;
+            min-width: calc(50% - 0.25rem) !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        /* Override any Streamlit column stacking */
+        .main .block-container .stColumns > div:nth-child(1),
+        .main .block-container .stColumns > div:nth-child(2) {
+            width: calc(50% - 0.25rem) !important;
+            flex: 0 0 calc(50% - 0.25rem) !important;
+        }
+        
+        .main .block-container .stColumns > div:nth-child(3),
+        .main .block-container .stColumns > div:nth-child(4) {
+            width: calc(50% - 0.25rem) !important;
+            flex: 0 0 calc(50% - 0.25rem) !important;
         }
     }
     
@@ -396,6 +408,7 @@ st.caption("Orkun's personal AI assistant powered by Orkun's documents")
 # Mobile-friendly quick actions in main area
 st.markdown("### ⚡ Quick Actions")
 
+# Quick action buttons in 2x2 grid
 col1, col2 = st.columns(2)
 with col1:
     if st.button("👤 About Orkun", help="Ask about Orkun's background", use_container_width=True):
@@ -446,14 +459,10 @@ with col4:
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.rerun()
 
-# Clear chat button in main UI for mobile access
-col1, col2 = st.columns([3, 1])
-with col1:
-    st.markdown("")  # Empty space for alignment
-with col2:
-    if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True, key="main_clear_chat"):
-        st.session_state.messages = [{"role": "assistant", "content": "Hi! I'm Orkun GPT. You can ask me anything about Orkun Sefik - his background, skills, education, or achievements. What would you like to know?"}]
-        st.rerun()
+# Clear chat button on its own line, left aligned
+if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=False, key="main_clear_chat"):
+    st.session_state.messages = [{"role": "assistant", "content": "Hi! I'm Orkun GPT. You can ask me anything about Orkun Sefik - his background, skills, education, or achievements. What would you like to know?"}]
+    st.rerun()
 
 st.markdown("---")
 
@@ -461,26 +470,26 @@ st.markdown("---")
 with st.sidebar:
     # Desktop-only info section
     st.markdown("""
-    <div class="orkun-info-box">
+        <div class="orkun-info-box">
         <div class="orkun-info-title">📚 About Orkun GPT</div>
         <div class="orkun-info-desc">This AI assistant was trained on:</div>
-        <ul class="orkun-info-list">
+            <ul class="orkun-info-list">
             <li>Orkun's CV & Resume</li>
             <li>University Transcript</li>
             <li>Some Other Personal Info</li>
-        </ul>
-    </div>
+            </ul>
+        </div>
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    
+
     # Chat Controls
     st.subheader("Chat Controls")
     
     if st.button("🗑️ Clear Chat", help="Clear all chat messages", use_container_width=True, key="sidebar_clear_chat"):
         st.session_state.messages = [{"role": "assistant", "content": "Hi! I'm Orkun GPT. You can ask me anything about Orkun Sefik - his background, skills, education, or achievements. What would you like to know?"}]
         st.rerun()
-    
+
     # Export chat option
     if st.button("📥 Export Chat", help="Download chat history", use_container_width=True):
         if "messages" in st.session_state and len(st.session_state.messages) > 1:
@@ -493,7 +502,7 @@ with st.sidebar:
             )
         else:
             st.warning("No chat history to export")
-    
+
     st.markdown("---")
     
     # Features section
