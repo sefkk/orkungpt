@@ -27,3 +27,6 @@ env/
 # ChromaDB
 chroma/
 *.sqlite3
+
+# Data files (personal documents)
+data/
